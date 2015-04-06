@@ -1,0 +1,29 @@
+{
+  "name": "ngCourse",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "browser-sync": "^2.5.2",
+    "gulp": "^3.8.11",
+    "gulp-angular-filesort": "^1.1.1",
+    "gulp-bower": "0.0.10",
+    "gulp-inject": "^1.2.0",
+    "gulp-sass": "^1.3.3",
+    "merge-stream": "^0.1.7",
+    "wiredep": "^2.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eloytoro/ngCourse"
+  },
+  "author": "eloytoro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eloytoro/ngCourse/issues"
+  },
+  "homepage": "https://github.com/eloytoro/ngCourse"
+}

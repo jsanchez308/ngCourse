@@ -1,0 +1,16 @@
+<div class="container-fluid row">
+    <div class="row text-center">
+        <input type="text" class="list-title" ng-model="list.title"></input>
+    </div>
+    <div class="row">
+        <add-task model="list.tasks"></add-task>
+    </div>
+    <div class="row text-left" ng-repeat="task in list.tasks track by $index">
+        <task model="task"></task>
+    </div>
+    <div class="row">
+        <div class="col-sm-5">
+            <span>Tasks completed: {{ completedCount }}</span>
+        </div>
+    </div>
+</div>

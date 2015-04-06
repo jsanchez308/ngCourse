@@ -1,0 +1,21 @@
+<div class="container text-center">
+    <div class="row">
+        <h1>ToDo</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <ul class="list-group row">
+                <li class="list-group-item btn list-group-item-info"
+                    ng-click="newList()">
+                    <i class="fa fa-plus fa-fw"></i>New List
+                </li>
+                <li class="list-group-item btn"
+                    ui-sref="dashboard.list(list)"
+                    ng-repeat="list in lists track by $index">
+                    {{ list.title }}
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-8" ui-view></div>
+    </div>
+</div>
