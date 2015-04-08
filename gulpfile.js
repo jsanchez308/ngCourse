@@ -93,4 +93,22 @@ gulp.task('serve', ['inject'], function () {
         .on('change', reload);
 });
 
+gulp.task('course', function () {
+    browserSync({
+        server: {
+            baseDir: 'course',
+            routes: {
+                '/README.md': 'README.md'
+            }
+        },
+        port: 5060,
+        ui: {
+            port: 5061
+        }
+    });
+
+    gulp.watch('README.md')
+        .on('change', reload);
+});
+
 gulp.task('default', ['serve']);

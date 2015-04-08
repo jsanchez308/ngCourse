@@ -15,6 +15,8 @@
 + Ordenado y estructurado
 + Curva de aprendizaje corta
 
+---
+
 ##MVC _(Model/View/Controller)_
 Data que provee el servidor (Modelo)
 ```json
@@ -37,6 +39,8 @@ Controlador
 ```
 Resultado
 > Conectado como **Eloy Toro** / _etoro@4geeks.com.ve_
+
+---
 
 #Primera aplicación de angular
 
@@ -63,6 +67,8 @@ angular.module('app', []) // Definición de módulo de angular
 </body>
 ```
 
+---
+
 #Scopes
 
 Angular separa el scope de los distintos controladores tanto a nivel de lógica como a nivel de DOM.
@@ -83,6 +89,9 @@ angular.module('app', []) // Definición de módulo de angular
     };
 });
 ```
+
+---
+
 ```html
 <!-- El modulo principal de nuestra aplicación se llama 'app' -->
 <body ng-app="app">
@@ -105,11 +114,14 @@ angular.module('app', []) // Definición de módulo de angular
 ```
 Angular usa _block scope_ para diferenciar los diferentes scopes en tu aplicación, muy parecido a como lo hace javascript en su estructura de código.
 
+---
+
 #Servicios
 
 Angular provee una serie de herramientas que aportan a la lógica de una aplicación
 
-###Usando un servicio
+##Usando un servicio
+
 En nuestro controlador
 ```javascript
 .controller('MyController', ['$scope', '$http', function ($scope, $http) {
@@ -122,15 +134,20 @@ En nuestro controlador
 }]);
 ```
 
-###Servicios Comunes
+---
+
+##Servicios Comunes
 * $http
 * $q
 * $location
 * $element
-_*[Documentación de Servicios](https://docs.angularjs.org/api/ng/service)_
+* _[Documentación de Servicios](https://docs.angularjs.org/api/ng/service)_
 
-###Declarando tus servicios
+##Declarando tus servicios
 Normalmente los servicios se usan para crear lógica que muchos componentes de la aplicación necesitan y comparten
+
+---
+
 ```javascript
 .service('Errors', function () {
     this.spanish = function (msg) {
@@ -139,7 +156,6 @@ Normalmente los servicios se usan para crear lógica que muchos componentes de l
             case 'InvalidAction': return 'Acción no Válida';
         }
     };
-
     this.english = function (msg) {
         switch (msg) {
             case 'InvalidCredentials': return 'Invalid username or password';
@@ -162,12 +178,39 @@ Uso en el controlador
 });
 ```
 
-#Directives
+---
+
+##Inyección de dependencias
+
+Los controladores (y otros componentes de angular) usan solo un subconjunto de todos los recursos disponibles, el desarrollador debe declarar programaticamente cuales se usaran usando la sintaxis de _dependency injection_.
+
+```javascript
+['$http', 'MyService', '$scope', function ($http, MyService, $scope) {
+    /* ... */
+}]
+```
+
+Angular tambien detecta cuales servicios se estan inyectando a la hora de instanciar componentes, asi que la notacion se puede simplificar mas aun.
+
+```javascript
+function ($http, MyService, $scope) {
+    /* ... */
+}
+```
+
+Pero en este caso el codigo no puede ser minificado, se deben usar herramientas que _anoten_ dependencias antes de pasar por el proceso de minificación
+
+---
+
+#Directivas
 
 Las directivas son una de las herramientas mas útiles y poderosas que Angular ofrece.
 + Altamente reutilizables
 + Ordenan el DOM
 + Separan la aplicación por componentes
+
+---
+
 ```javascript
 angular.module('app', [])
 
@@ -195,9 +238,134 @@ El resultado seria
 </div>
 ```
 
+---
+
 ##Otras opciones
 + `restrict`: `'E'` para elementos como mostrado en el ejemplo, `'A'` para atributos (asi como lo es `href` o `class`) o `'EA'` para ambas.
 + `replace`: `true` en caso que se desee que se borre el nombre de la directiva una vez compilado el DOM (es `false` por defecto)
 + `transclude`: `true` permite que dentro de los delimitadores de la directiva exista contenido (`false` por defecto)
 + `template`: Describe el html de la directiva inline
 + `templateUrl`: El html de la directiva como archivo en tu aplicación (Recomendado)
++ `controller`: Las directivas pueden instanciar o usar controladores.
++ `link`: Callback ejecutado cuando la directiva se carga en el DOM
++ `scope`: Determina si la directiva crea su propio scope o genera el propio a partir del scope padre.
+El formato con el que se crea el scope es:
+
+```javascript
+scope: {
+    // valor del scope: como lo obtiene
+    text: '=text'
+}
+```
+
+```html
+<my-button text="buttonText"></my-button>
+```
+
+---
+
+Existen 3 distintas maneras de obtener valores del scope del padre en la directiva.
+
+* `'='` - Obtiene el valor directamente del scope del padre.
+* `'@'` - Es simplemente un string puesto en el campo.
+* `'&'` - Evalua la _expresión angular_ en el campo.
+
+```javascript
+scope: {
+    text: '=',
+    icon: '@',
+    onclick: '&'
+}
+```
+
+```html
+<my-button
+    text="buttonText" <!-- variable en el scope -->
+    icon="fa-plus" <!-- el string sin evaluar -->
+    onclick="clicked = true" <!-- expresion sin evaluar -->
+>
+</my-button>
+```
+
+---
+
+##Link
+
+El proceso de enlace de la directiva sucede despues de que la directiva es compilada y es mostrada en el DOM, el callback tiene una firma que provee al desarrollador herramientas que puede usar para generar lógica de la directiva solo posible despues de que esta es enlazada.
+
+```javascript
+link: function (scope, element, attrs, ctrl, transclude) {
+
+}
+```
+
+* `scope` - El scope interno de la directiva.
+* `element` - Elemento JQuery de la directiva despues de compilada.
+* `attrs` - Objeto con los atributos HTML y sus valores pasados a la directiva.
+* `ctrl` - Controlador propio de la directiva.
+* `transclude` - Método para compilar el contenido interno de elemento de la directiva.
+
+---
+
+##Directivas predefinidas
+Angular ofrece un conjunto de directivas predefinidas que tienen comportamientos especiales.
+* `ng-model="value"` - Crea un _two way data-binding_ entre el controlador y la directiva, esto quiere decir que si el valor que resguarda es modificado en alguno se ve reflejado en el otro, normalmente usado sobre `<input>`
+
+```html
+<input type="text" ng-model="user.name">
+```
+
+* `ng-repeat="value in values"` - Puede entenderse como in `for value in values` ya que itera sobre el arreglo dado, creando un _child scope_ por cada iteracion que contiene el valor del arreglo dentro de el
+
+```html
+<p ng-repeat="user in users">
+    <strong>{{ user.name }}</strong> - <i>{{ user.email }}</i>
+</p>
+```
+
+Tendria como resultado
+
+> **Eloy Toro** - _eloytoro@4geeks.com.ve_
+
+> **Rigoberto** - _rigoberto@4geeks.com.ve_
+
+---
+
+* `ng-show="value"` `ng-hide="value"` - Muestra u oculta el elemento dependiendo del valor booleano pasado por parametro.
+
+```html
+<div ng-show="isVisible"></div>
+```
+
+* `ng-class="{ class: value }"` - Agrega clases al elemento dependiendo de los valores booleanos que cada clase tiene.
+
+```html
+<button ng-class="{ active: isActive, error: hasError }"></button>
+```
+
+---
+
+#Eventos
+
+Angular tiene un sistema de propagación de eventos que facilita la comunicación entre diferentes scopes.
+Cada scope tiene un API para poder propagar o escuchar eventos
+* `$scope.$on(event, callback)` - Ejecuta el callback cuando el evento es atajado.
+* `$scope.$broadcast(event, params)` - Propaga un evento hacia scopes hijos pasando parametros.
+* `$scope.$emit(event, params)` - Igual que _broadcast_ pero hacia scopes padres.
+
+---
+
+Cabe destacar que la jerarquía de scopes en angular es similar a la de un árbol, todos los scopes son hijos de `$rootScope` el cual puede ser inyectado como un servicio, toda propiedad existente en este scope especial sera heredada por sus hijos, todos los _broadcasts_ que genere este scope llegarán a todos los scopes y todos los _emits_ serán atajados por este scope.
+
+```javascript
+$scope.$broadcast('UserLogin', {
+    username: 'eloy',
+    password: '12345'
+});
+
+$scope.$on('UserLogin', function (event, user) {
+    /* ... */
+});
+```
+
+---
