@@ -6,6 +6,7 @@ var gulp = require('gulp'),
     filesort = require('gulp-angular-filesort'),
     inject = require('gulp-inject'),
     merge = require('merge-stream'),
+    watch = require('gulp-watch'),
     wiredep = require('wiredep').stream;
 
 var globs = {
@@ -19,27 +20,41 @@ var globs = {
     ]
 };
 
-gulp.task('sass', function () {
+var compileSass = function () {
     return gulp.src(globs.styles)
-        .pipe(sass())
-        .pipe(gulp.dest('app/styles'))
-        .pipe(reload({ stream: true }));
-});
+    .pipe(sass())
+    .pipe(gulp.dest('app/styles'))
+    .pipe(reload({ stream: true }));
+};
 
-gulp.task('bower', function () {
-    return bower({ cmd: 'install' })
+gulp.task('sass-build', ['wiredep-sass'], compileSass);
+
+gulp.task('sass', compileSass)
+
+gulp.task('app-bower', function () {
+    return bower({ cmd: 'install', cwd: './app' })
         .pipe(gulp.dest('app/bower_components'));
 });
 
-gulp.task('wiredep', ['bower'], function () {
+gulp.task('wiredep-index', ['app-bower'], function () {
     return gulp.src('app/index.html')
         .pipe(wiredep({
-            directory: 'app/bower_components'
+            cwd: 'app'
         }))
         .pipe(gulp.dest('app/'));
 });
 
-gulp.task('inject', ['wiredep'], function () {
+gulp.task('wiredep-sass', ['app-bower'], function () {
+    return gulp.src(globs.styles)
+        .pipe(wiredep({
+            cwd: 'app'
+        }))
+        .pipe(gulp.dest('app/styles'));
+});
+
+gulp.task('wiredep', ['wiredep-sass', 'wiredep-index']);
+
+var injectFiles = function () {
     var js = gulp.src(globs.js)
         .pipe(filesort());
     var scss = gulp.src(globs.styles);
@@ -48,9 +63,13 @@ gulp.task('inject', ['wiredep'], function () {
             relative: true
         }))
         .pipe(gulp.dest('app/'));
-});
+};
 
-gulp.task('serve', ['sass', 'inject'], function () {
+gulp.task('inject', ['wiredep', 'sass-build'], injectFiles);
+
+gulp.task('inject-index', ['wiredep-index'], injectFiles);
+
+gulp.task('serve', ['inject'], function () {
     browserSync({
         server: {
             baseDir: 'app'
@@ -61,7 +80,13 @@ gulp.task('serve', ['sass', 'inject'], function () {
         }
     });
 
-    gulp.watch('/bower_components', ['bower']);
+    gulp.watch('app/bower_components', ['app-bower']);
+
+    watch(globs.js, function (vinyl) {
+        if (vinyl.event !== 'change') {
+            gulp.start('inject-index');
+        }
+    });
 
     gulp.watch(globs.styles, ['sass']);
     gulp.watch([globs.html, globs.js])
