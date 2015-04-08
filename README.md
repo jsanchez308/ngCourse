@@ -127,7 +127,7 @@ En nuestro controlador
 * $q
 * $location
 * $element
-_[Documentación de Servicios](https://docs.angularjs.org/api/ng/service)_
+_*[Documentación de Servicios](https://docs.angularjs.org/api/ng/service)_
 
 ###Declarando tus servicios
 Normalmente los servicios se usan para crear lógica que muchos componentes de la aplicación necesitan y comparten
@@ -157,7 +157,7 @@ Uso en el controlador
     })
     .success(function (data) { /*...*/ })
     .error(function (data) {
-        console.log(Erros.spanish(data.msg));
+        console.log(Errors.spanish(data.msg));
     });
 });
 ```
@@ -196,8 +196,8 @@ El resultado seria
 ```
 
 ##Otras opciones
-+ _restrict_: `'E'` para elementos como mostrado en el ejemplo, `'A'` para atributos (asi como lo es `href` o `class`) o `'EA'` para ambas.
-+ _replace_: `true` en caso que se desee que se borre el nombre de la directiva una vez compilado el DOM (es `false` por defecto)
-+ _transclude_: `true` permite que dentro de los delimitadores de la directiva exista contenido (`false` por defecto)
-+ _template_: Describe el html de la directiva inline
-+ _templateUrl_: El html de la directiva como archivo en tu aplicación (Recomendado)
++ `restrict`: `'E'` para elementos como mostrado en el ejemplo, `'A'` para atributos (asi como lo es `href` o `class`) o `'EA'` para ambas.
++ `replace`: `true` en caso que se desee que se borre el nombre de la directiva una vez compilado el DOM (es `false` por defecto)
++ `transclude`: `true` permite que dentro de los delimitadores de la directiva exista contenido (`false` por defecto)
++ `template`: Describe el html de la directiva inline
++ `templateUrl`: El html de la directiva como archivo en tu aplicación (Recomendado)
