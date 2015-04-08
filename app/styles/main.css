@@ -4913,9 +4913,13 @@ button.close {
   font-family: inherit;
   font-size: 28px;
   background: #EEEEEE; }
+  .list-title ~ .fa {
+    display: none; }
   .list-title:focus {
     -webkit-box-shadow: inset 0 0 7px #66afe9;
     box-shadow: inset 0 0 7px #66afe9; }
+  .list-title:focus ~ .fa, .list-title:hover ~ .fa {
+    display: inline-block; }
 
 * {
   border-radius: 0 !important; }

@@ -1,4 +1,6 @@
-@import "bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap";
+// bower:scss
+@import "../bower_components/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+// endbower
 
 .list-title {
     display: block;
@@ -10,8 +12,12 @@
     font-family: inherit;
     font-size: 28px;
     background: #EEEEEE;
+    ~.fa { display: none; }
     &:focus {
         @include box-shadow(inset 0 0 7px #66afe9)
+    }
+    &:focus, &:hover {
+        ~.fa { display: inline-block; }
     }
 }
 

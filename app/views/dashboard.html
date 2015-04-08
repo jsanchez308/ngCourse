@@ -10,9 +10,9 @@
                     <i class="fa fa-plus fa-fw"></i>New List
                 </li>
                 <li class="list-group-item btn"
-                    ui-sref="dashboard.list(list)"
-                    ng-repeat="list in lists track by $index">
-                    {{ list.title }}
+                    ng-click="select(item)"
+                    ng-repeat="item in lists track by $index">
+                    {{ item.title }}
                 </li>
             </ul>
         </div>

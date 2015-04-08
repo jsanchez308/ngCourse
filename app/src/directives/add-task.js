@@ -8,7 +8,7 @@ angular.module('ngCourse')
         scope: { tasks: '=model' },
         link: function (scope, element, attrs, ctrl) {
             element.find('input').on('keydown', function (e) {
-                if (e.keyCode == 13) {
+                if (e.keyCode == 13 && scope.title) {
                     scope.$apply(function () {
                         scope.tasks.push({
                             title: scope.title,
