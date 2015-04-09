@@ -7,6 +7,11 @@ var gulp = require('gulp'),
     inject = require('gulp-inject'),
     merge = require('merge-stream'),
     watch = require('gulp-watch'),
+    rename = require('gulp-rename'),
+    usemin = require('gulp-usemin'),
+    uglify = require('gulp-uglify'),
+    minifycss = require('gulp-minify-css'),
+    annotate = require('gulp-ng-annotate'),
     wiredep = require('wiredep').stream;
 
 var globs = {
@@ -14,22 +19,22 @@ var globs = {
     html: 'app/**/*.html',
     js: 'app/src/**/*.js',
     assets: [
-        './app/fonts/**/*',
-        './app/images/**/*',
-        './app/views/**/*'
+        'app/fonts/**/*',
+        'app/images/**/*',
+        'app/views/**/*'
     ]
 };
 
+var fontExts = ['eot', 'svg', 'ttf', 'woff', 'woff2', 'otf'];
+
 var compileSass = function () {
     return gulp.src(globs.styles)
-    .pipe(sass())
-    .pipe(gulp.dest('app/styles'))
-    .pipe(reload({ stream: true }));
+        .pipe(sass())
+        .pipe(gulp.dest('app/styles'))
+        .pipe(reload({ stream: true }));
 };
 
-gulp.task('sass-build', ['wiredep-sass'], compileSass);
-
-gulp.task('sass', compileSass)
+gulp.task('sass', ['wiredep-sass'], compileSass);
 
 gulp.task('app-bower', function () {
     return bower({ cmd: 'install', cwd: './app' })
@@ -54,6 +59,14 @@ gulp.task('wiredep-sass', ['app-bower'], function () {
 
 gulp.task('wiredep', ['wiredep-sass', 'wiredep-index']);
 
+gulp.task('bower-fonts', ['app-bower'], function () {
+    return gulp.src(fontExts.map(function (ext) {
+        return 'app/bower_components/**/*.' + ext;
+    })).pipe(rename({
+        dirname: ''
+    })).pipe(gulp.dest('app/fonts/lib'));
+});
+
 var injectFiles = function () {
     var js = gulp.src(globs.js)
         .pipe(filesort());
@@ -65,9 +78,7 @@ var injectFiles = function () {
         .pipe(gulp.dest('app/'));
 };
 
-gulp.task('inject', ['wiredep', 'sass-build'], injectFiles);
-
-gulp.task('inject-index', ['wiredep-index'], injectFiles);
+gulp.task('inject', ['wiredep', 'sass'], injectFiles);
 
 gulp.task('serve', ['inject'], function () {
     browserSync({
@@ -84,12 +95,15 @@ gulp.task('serve', ['inject'], function () {
 
     watch(globs.js, function (vinyl) {
         if (vinyl.event !== 'change') {
-            gulp.start('inject-index');
+            injectFiles();
+        } else {
+            reload();
         }
     });
 
-    gulp.watch(globs.styles, ['sass']);
-    gulp.watch([globs.html, globs.js])
+    gulp.watch(globs.styles)
+        .on('change', compileSass);
+    gulp.watch(globs.html)
         .on('change', reload);
 });
 
@@ -110,5 +124,34 @@ gulp.task('course', function () {
     gulp.watch('README.md')
         .on('change', reload);
 });
+
+gulp.task('mv', function () {
+    return gulp.src(globs.assets, { base: 'app' })
+        .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('usemin', function () {
+    return gulp.src('app/index.html')
+        .pipe(usemin({
+            css: [minifycss(), 'concat'],
+            app: [annotate(), uglify()],
+            vendor: [uglify()]
+        }))
+        .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('build', ['usemin', 'mv']);
+
+gulp.task('deploy', ['build'], function () {
+    browserSync({
+        server: {
+            baseDir: 'dist'
+        },
+        port: 5010,
+        ui: {
+            port: 5011
+        }
+    });
+})
 
 gulp.task('default', ['serve']);

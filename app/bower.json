@@ -19,5 +19,10 @@
     "bootstrap-sass-official": "~3.3.4",
     "angular-ui-router": "~0.2.13",
     "font-awesome": "~4.3.0"
+  },
+  "overrides": {
+      "font-awesome": {
+          "main": "scss/font-awesome.scss"
+      }
   }
 }

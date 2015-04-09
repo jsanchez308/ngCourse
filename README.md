@@ -150,17 +150,14 @@ Normalmente los servicios se usan para crear lógica que muchos componentes de l
 
 ```javascript
 .service('Errors', function () {
-    this.spanish = function (msg) {
+    this.parse = function (msg) {
         switch (msg) {
             case 'InvalidCredentials': return 'Usuario o contraseña incorrecta';
             case 'InvalidAction': return 'Acción no Válida';
         }
     };
-    this.english = function (msg) {
-        switch (msg) {
-            case 'InvalidCredentials': return 'Invalid username or password';
-            case 'InvalidAction': return 'Invalid Action';
-        }
+    this.log = function (msg) {
+        console.log(this.parse(msg));
     };
 });
 ```
@@ -173,7 +170,7 @@ Uso en el controlador
     })
     .success(function (data) { /*...*/ })
     .error(function (data) {
-        console.log(Errors.spanish(data.msg));
+        console.log(Errors.parse(data.msg));
     });
 });
 ```
