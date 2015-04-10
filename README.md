@@ -199,6 +199,33 @@ Pero en este caso el codigo no puede ser minificado, se deben usar herramientas 
 
 ---
 
+#Factories
+
+Los componentes de tipo `factory` imitan el patron de diseño que va por el mismo nombre.
+
+```javascript
+.factory('User', function () {
+    var constructor = function (name, birthday) {
+        this.name = name;
+        this.birthday = birthday;
+    };
+    constructor.age = function () {
+        var total = new Date(Date.now() - this.birthday.getTime());
+        return Math.abs(total.getUTCFullYear() - 1970);
+    };
+    return constructor;
+});
+
+// en el controller...
+
+.controller('MyCtrl', function (User) {
+    var eloy = new User('Eloy', new Date(1993, 2, 13));
+    eloy.age() // => 22
+});
+```
+
+---
+
 #Directivas
 
 Las directivas son una de las herramientas mas útiles y poderosas que Angular ofrece.
@@ -328,6 +355,14 @@ Tendria como resultado
 
 ---
 
+Representación gráfica de la estructura de scopes en un DOM
+
+![scopes](img/concepts-scope.png)
+
+_Imagen de los docs de [Scope](https://docs.angularjs.org/guide/scope)_
+
+---
+
 * `ng-show="value"` `ng-hide="value"` - Muestra u oculta el elemento dependiendo del valor booleano pasado por parametro.
 
 ```html
@@ -349,6 +384,7 @@ Cada scope tiene un API para poder propagar o escuchar eventos
 * `$scope.$on(event, callback)` - Ejecuta el callback cuando el evento es atajado.
 * `$scope.$broadcast(event, params)` - Propaga un evento hacia scopes hijos pasando parametros.
 * `$scope.$emit(event, params)` - Igual que _broadcast_ pero hacia scopes padres.
+* `$scope.$watch(expression, callback)` - Ataja cambios sobre valores en el scope.
 
 ---
 
@@ -365,4 +401,49 @@ $scope.$on('UserLogin', function (event, user) {
 });
 ```
 
+Y para revisar cambios sobre propiedades del scope
+
+```javascript
+$scope.$watch('title', function () {
+    console.log($scope.title);
+});
+```
+
 ---
+
+#Filtros
+
+Los filtros sirven para modificar y/o parsear data en el DOM a tiempo real de una manera limpia y estructurada
+
+```javascript
+.filter('caps', function () {
+    return function (input) {
+        return input.toUpperCase();
+    };
+})
+```
+
+```html
+<p> Mi nombre es {{ user.name | caps }}</p>
+```
+
+Resultaria en
+
+> Mi nombre es ELOY
+
+Los filtros tambien pueden tomar parametros, se separan por `:` en el DOM
+
+---
+
+##Filtros pre-definidos
+
+* `date:format` - Existe para mostrar objetos `Date` en el DOM usando el formato especificado (asi como `'dd/MM/yyyy'`)
+* `json`
+* `currency:symbol:fraction` - Para convertir números en moneda (`currency:'Bs':0`)
+* [Documentación de filtros](https://docs.angularjs.org/api/ng/filter)
+
+##Filtros sobre arreglos
+
+* `limitTo:limit:begin`
+* `orderBy:expression:reverse`
+* `filter:expression:comparator`

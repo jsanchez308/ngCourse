@@ -112,7 +112,8 @@ gulp.task('course', function () {
         server: {
             baseDir: 'course',
             routes: {
-                '/README.md': 'README.md'
+                '/README.md': 'README.md',
+                '/img': 'img'
             }
         },
         port: 5060,
