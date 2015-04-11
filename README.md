@@ -13,7 +13,6 @@
 + Comunicación con un API RESTful
 + Comunidad extensa / Gran cantidad de plug-ins.
 + Ordenado y estructurado
-+ Curva de aprendizaje corta
 
 ---
 
