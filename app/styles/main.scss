@@ -4,6 +4,9 @@ $fa-font-path: "../fonts/lib";
 @import "../bower_components/font-awesome/scss/font-awesome.scss";
 // endbower
 
+$item-background: #E2E5EE;
+$page-background: #61A598;
+
 .list-title {
     display: block;
     width: 100%;
@@ -13,7 +16,7 @@ $fa-font-path: "../fonts/lib";
     outline: none;
     font-family: inherit;
     font-size: 28px;
-    background: #EEEEEE;
+    background: $item-background;
     ~.fa { display: none; }
     &:focus {
         @include box-shadow(inset 0 0 7px #66afe9)
@@ -42,8 +45,37 @@ $fa-font-path: "../fonts/lib";
     margin-left: 15px;
     margin-right: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid black;
     .done {
         text-decoration: line-through;
     }
+}
+
+.task-list {
+    background: #DDD5A4;
+    padding-bottom: 10px;
+}
+
+.list-group-item {
+    background: $item-background;
+}
+
+.list-group-item-info {
+    background: #3D3331;
+    color: white;
+    &:hover {
+        color: white;
+    }
+}
+
+body {
+    background: $page-background;
+}
+
+.header {
+    color: #E2E5EE;
+}
+
+.fa.form-control-feedback {
+    top: 10px;
 }
