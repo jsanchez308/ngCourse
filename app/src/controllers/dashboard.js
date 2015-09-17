@@ -1,20 +1,21 @@
 angular.module('ngCourse')
 
-.controller('DashboardCtrl', function ($scope, $state) {
-    $scope.lists = $state.current.data.lists;
+.controller('DashboardCtrl', function ($scope, $state, lists) {
+
+    $scope.lists = lists;
 
     $scope.newList = function () {
-        var list = {
-            title: 'Untitled List',
-            tasks: [],
-            index: $scope.lists.length
-        };
+        var list = new ListResource({
+            name: 'Untitled List',
+            tasks: []
+        });
         $scope.lists.push(list);
         $scope.select(list);
     };
 
     $scope.select = function (list) {
-        $scope.list = list;
-        $state.go('dashboard.list', $scope.list);
+        $state.go('dashboard.list', {
+            index: list._id
+        });
     };
 });

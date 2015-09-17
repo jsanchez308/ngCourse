@@ -9,13 +9,22 @@ angular.module('ngCourse')
             url: '/',
             templateUrl: 'views/dashboard.html',
             controller: 'DashboardCtrl',
-            data: {
-                lists: []
+            resolve: {
+                lists: function (ListResource) {
+                    return ListResource.query();
+                }
             }
         })
         .state('dashboard.list', {
-            url: ':index',
+            url: '/:index',
             templateUrl: 'views/list.html',
-            controller: 'ListCtrl'
+            controller: 'ListCtrl',
+            resolve: {
+                list: function (ListResource, $stateParams) {
+                    return ListResource.get({}, {
+                        _id: $stateParams.index
+                    })
+                }
+            }
         });
 });

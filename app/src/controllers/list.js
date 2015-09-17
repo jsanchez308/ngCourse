@@ -1,12 +1,16 @@
 angular.module('ngCourse')
 
-.controller('ListCtrl', function ($scope, $state) {
-    if (!$scope.list) return $state.go('dashboard');
+.controller('ListCtrl', function ($scope, $state, list) {
+    $scope.list = list;
+
+    $scope.saveList = function () {
+        $scope.list.$save();
+    };
 
     $scope.addTask = function (title) {
         $scope.list.tasks.push({
             done: false,
-            name: title
+            text: title
         });
     };
 

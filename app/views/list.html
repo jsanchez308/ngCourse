@@ -1,7 +1,14 @@
 <div class="container-fluid row task-list">
     <div class="row text-center">
-        <input type="text" class="list-title" ng-model="list.title"></input>
+        <input type="text" class="list-title" ng-model="list.name"></input>
         <i class="fa fa-pencil fa-fw form-control-feedback"></i>
+    </div>
+    <div class="row">
+        <button class="btn btn-default btn-block"
+            ng-hide="list._id"
+            ng-click="saveList()">
+            Crear
+        </button>
     </div>
     <div class="row">
         <add-task model="list.tasks"></add-task>
