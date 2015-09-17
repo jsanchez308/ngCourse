@@ -1,1 +1,1 @@
-angular.module('ngCourse', ['ui.router']);
+angular.module('ngCourse', ['ui.router', 'ngResource']);
