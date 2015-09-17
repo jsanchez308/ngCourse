@@ -7,6 +7,10 @@ angular.module('ngCourse')
         $scope.list.$save();
     };
 
+    $scope.updateList = function () {
+        $scope.list.$update();
+    };
+
     $scope.addTask = function (title) {
         $scope.list.tasks.push({
             done: false,

@@ -9,6 +9,11 @@
             ng-click="saveList()">
             Crear
         </button>
+        <button class="btn btn-default btn-block"
+            ng-show="list._id"
+            ng-click="updateList()">
+            Guardar
+        </button>
     </div>
     <div class="row">
         <add-task model="list.tasks"></add-task>

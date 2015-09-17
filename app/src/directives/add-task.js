@@ -11,7 +11,7 @@ angular.module('ngCourse')
                 if (e.keyCode == 13 && scope.title) {
                     scope.$apply(function () {
                         scope.tasks.push({
-                            title: scope.title,
+                            text: scope.title,
                             done: false
                         });
                         scope.title = '';

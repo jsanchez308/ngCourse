@@ -11,19 +11,24 @@ angular.module('ngCourse')
             controller: 'DashboardCtrl',
             resolve: {
                 lists: function (ListResource) {
-                    return ListResource.query();
+                    return ListResource.query().$promise;
                 }
             }
         })
         .state('dashboard.list', {
-            url: '/:index',
+            url: ':list',
             templateUrl: 'views/list.html',
             controller: 'ListCtrl',
             resolve: {
                 list: function (ListResource, $stateParams) {
+                    if (!$stateParams.list)
+                        return new ListResource({
+                            name: 'Nueva Lista',
+                            tasks: []
+                        });
                     return ListResource.get({}, {
-                        _id: $stateParams.index
-                    })
+                        _id: $stateParams.list
+                    }).$promise;
                 }
             }
         });
